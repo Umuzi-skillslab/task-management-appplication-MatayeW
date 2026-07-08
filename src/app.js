@@ -170,16 +170,36 @@ function getHighPriorityTasks(minPriority) {
 }
 
 // Object with missing methods
-var TaskManager = {
+const TaskManager = {
     tasks: taskList,
     
-    // Missing: method to add task using functional approach
-    // Missing: method using array methods (map, filter, reduce)
+    // Missing: method to add task using functional approach*
+    // Missing: method using array methods (map, filter, reduce)*
     
     getTotalTasks: function() {
         return this.tasks.length;
     }
+    addTask(task) {
+        this.tasks.push(task);
+    },
+    getCompletedTasks() {
+        return this.tasks.filter(task => task.completed);
+    }
 };
 
-// Export issues - should be a module
-// Missing: proper module exports
+// Export issues - should be a module*
+// Missing: proper module exports*
+export {
+    Task,
+    SubTask,
+    addTask,
+    displayAllTasks,
+    findTaskByTitle,
+    updateTaskPriority,
+    getTaskDetails,
+    mergeTasks,
+    countCompletedTasks,
+    calculateAveragePriority,
+    getHighPriorityTasks,
+    TaskManager
+};
