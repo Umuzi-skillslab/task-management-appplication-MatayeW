@@ -12,7 +12,7 @@ class Task {
         this.priority = priority;
         this.completed = false;
         // Missing: id property*
-        this.id = taskCounter +1;
+        this.id = ++taskCounter;
     }
     
     // Missing: method to toggle completion*
@@ -41,7 +41,6 @@ class SubTask extends Task {
 function addTask(title, description, priority) {
     const newTask = new Task(title, description, priority);  // Should use const*
     taskList.push(newTask);
-    taskCounter++;
     return newTask;
 }
 
@@ -104,7 +103,6 @@ function getTaskDetails(task) {
         priority,
         completed
     } = task;
-    }
     
     return {
         title: title,
@@ -144,13 +142,16 @@ function countCompletedTasks(tasks, index = 0) {
 
 // Function with Math object issues
 function calculateAveragePriority() {
-    var total = 0;
+    let total = 0;
     // Missing: check for empty array*
     // for (var i = 0; i < taskList.length; i++) {
     //     total = total + taskList[i].priority;
     // }
     if(taskList.length === 0) {
         return 0;
+    }
+    for (const task of tasklist) {
+        total += task.priority;
     }
     // Should use Math.round or toFixed*
     return Math.round(total / taskList.length);
@@ -178,7 +179,7 @@ const TaskManager = {
     
     getTotalTasks: function() {
         return this.tasks.length;
-    }
+    },
     addTask(task) {
         this.tasks.push(task);
     },
