@@ -21,6 +21,8 @@ function handleAddTask() {
     const titleInput = document.getElementById("title");
     const descInput = document.getElementById("description");
     
+    const priorityInput = document.getElementById("priority");
+    const priority = Number(priorityInput.value) || 1;
     // No validation
     // Should use event.preventDefault() if form*
     
@@ -35,7 +37,7 @@ function handleAddTask() {
         return;
     }
     
-    addTask(title, description, 1);
+    addTask(title, description, priority);
     saveTasks():
     displayTasks();
     

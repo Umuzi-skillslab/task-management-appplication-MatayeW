@@ -15,8 +15,9 @@
             <!-- Form with issues -->
             <input type="text" id="title" placeholder="Task Title">
             <input type="text" id="description" placeholder="Description">
-            <!-- Missing: priority input -->
-            <button class="add-task-btn">Add Task</button>
+            <!-- Missing: priority input* -->
+            <input type="number" id="priority" placeholder="Priority (1-5)" min="1" max="5">            
+            <button type="button" class="add-task-btn">Add Task</button>
         </div>
         
         <div class="task-list" id="task-list">
@@ -28,9 +29,10 @@
         </div>
     </div>
     
-    <!-- Scripts loaded in wrong order -->
-    <script src="dom.js"></script>
-    <script src="app.js"></script>
-    <!-- Missing: module script -->
+    <!-- Scripts loaded in wrong order* -->
+    <script src="./src/app.js"></script>
+    <script src="./src/dom.js"></script>
+    <!-- Missing: module script* -->
+     <script type="module" src="./src/app.js"></script>
 </body>
 </html>
