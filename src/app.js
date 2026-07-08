@@ -150,7 +150,7 @@ function calculateAveragePriority() {
     if(taskList.length === 0) {
         return 0;
     }
-    for (const task of tasklist) {
+    for (const task of taskList) {
         total += task.priority;
     }
     // Should use Math.round or toFixed*
@@ -190,17 +190,17 @@ const TaskManager = {
 
 // Export issues - should be a module*
 // Missing: proper module exports*
-export {
-    Task,
-    SubTask,
-    addTask,
-    displayAllTasks,
-    findTaskByTitle,
-    updateTaskPriority,
-    getTaskDetails,
-    mergeTasks,
-    countCompletedTasks,
-    calculateAveragePriority,
-    getHighPriorityTasks,
-    TaskManager
-};
+// export {
+//     Task,
+//     SubTask,
+//     addTask,
+//     displayAllTasks,
+//     findTaskByTitle,
+//     updateTaskPriority,
+//     getTaskDetails,
+//     mergeTasks,
+//     countCompletedTasks,
+//     calculateAveragePriority,
+//     getHighPriorityTasks,
+//     TaskManager
+// };

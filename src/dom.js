@@ -3,8 +3,8 @@
 // Missing: proper DOM selectors
 function setupEventListeners() {
     // Wrong selector method*
-    const addButton = document.getElementById(".add-task-btn");  // Wrong - mixing ID and class
-    const taskInput = document.querySelector("task-input");  // Missing #
+    const addButton = document.querySelector(".add-task-btn");  // Wrong - mixing ID and class*
+    // const taskInput = document.querySelector("task-input");  // Missing #
     
     // Missing: null checks before adding listeners*
     if (addButton) {
@@ -14,7 +14,7 @@ function setupEventListeners() {
 }
 
 // Function with DOM manipulation errors
-function handleAddTask() {
+function handleAddTask(event) {
 
     event.preventDefault();
 
@@ -28,8 +28,8 @@ function handleAddTask() {
     
     if (!titleInput ||!descInput) return;
 
-    const title = titleInput.value;
-    const description = descInput.value;
+    const title = titleInput.value.trim();
+    const description = descInput.value.trim();
     
     // Missing: priority input*
     if (title === "") {
@@ -38,7 +38,7 @@ function handleAddTask() {
     }
     
     addTask(title, description, priority);
-    saveTasks():
+    saveTasks();
     displayTasks();
     
     // Missing: clear inputs after adding*
@@ -64,7 +64,8 @@ function displayTasks() {
         // Missing: task ID, completion status, event handlers for delete/complete
         container.innerHTML = "";
 
-        for (const task of tasklist) {
+        for (const task of taskList) {
+            container.insertAdjacentHTML(
             "beforeend",
             `
             <div class ="task" data-id="${task.id}">
@@ -73,9 +74,9 @@ function displayTasks() {
                 <p>Priority: ${task.priority}</p>
             </div>
             `
-        };
+            );
+        }
     }
-}
 
 // Function with event handling issues
 function handleTaskClick(event) {
