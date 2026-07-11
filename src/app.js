@@ -62,7 +62,7 @@ function addTask(title, description, priority) {
 
 function displayAllTasks() {
     for (const task of taskList) {
-        console.log(task.title);
+        console.log(task.getInfo());
     }
 }
 
@@ -109,14 +109,18 @@ function getTaskDetails(task) {
         title,
         description,
         priority,
-        completed
+        completed,
+        dateCreated,
+        timeCreated
     } = task;
     
     return {
         title,
         description,
         priority,
-        completed
+        completed,
+        dateCreated,
+        timeCreated
     };
 }
 
@@ -141,6 +145,7 @@ function countCompletedTasks(tasks, index = 0) {
         return countCompletedTasks(tasks, index + 1);
     }
 
+    // convert priority labels into numbers so an average can be calculated
 function calculateAveragePriority() {
     let total = 0;
 
@@ -237,6 +242,7 @@ const TaskManager = {
         if (task) {
             task.completed = !task.completed;
         }
+        return false;
     }
 };
 
@@ -251,6 +257,7 @@ export {
     updateTaskPriority,
     getTaskDetails,
     mergeTasks,
+    changeTaskPriority,
     countCompletedTasks,
     calculateAveragePriority,
     getHighPriorityTasks,

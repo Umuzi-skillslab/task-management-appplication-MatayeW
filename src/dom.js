@@ -110,7 +110,7 @@ function handleTaskClick(event) {
     const completeButton = event.target.closest(".complete-btn");
 
     if (completeButton) {
-        const taskElement = deleteButton.closest(".task");
+        const taskElement = completeButton.closest(".task");
         const taskId = taskElement.dataset.id;
 
         const task = TaskManager.findTask(taskId);
@@ -120,7 +120,7 @@ function handleTaskClick(event) {
             saveToStorage(taskList);
             displayTasks();
 
-            console.log("Task completion updated.")
+            console.log("Task marked as completed.");
         }
         return;
     }

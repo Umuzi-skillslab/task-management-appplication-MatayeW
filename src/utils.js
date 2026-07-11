@@ -29,7 +29,7 @@ function generateRandomId() {
     return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 
-// records the current date and time (that the task is created)
+// object containing a unique ID, creation date and time
 function getCurrentDateTime() {
     const now = new Date();
 
@@ -81,7 +81,7 @@ function formatTaskNames(tasks) {
 }
 // format a task for display
 function formatTaskInfo(task) {
-    return `${task.title} (${task.priority})`;
+    return `${task.title} (${task.priority}) - ${task.dateCreated} ${task.timeCreated}`;
 }
 
 // export utility functions to use in other modules

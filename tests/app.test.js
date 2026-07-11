@@ -1,10 +1,29 @@
-// Jest Tests - Starter Code with Errors and Missing Tests
+// Jest Tests
 
 // Missing: proper imports/requires
+import {
+    Task,
+    SubTask,
+    taskList,
+    addTask,
+    findTaskByTitle,
+    updateTaskPriority,
+    getTaskDetails,
+    mergeTasks,
+    countCompletedTasks,
+    calculateAveragePriority,
+    getHighPriorityTasks,
+    TaskManager
+} from "./app.js";
+
+// to reset the task list before every test
+beforeEach(() => {
+    taskList.length = 0;
+});
 
 describe('Task Class', () => {
     test('should create a task', () => {
-        var task = new Task('Test Task', 'Description', 3);
+        const task = new Task('Test Task', 'Description', 'High');
         expect(task.title).toBe('Test Task');
         // Missing: other property checks
     });
