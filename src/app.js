@@ -230,6 +230,14 @@ const TaskManager = {
         taskList.length = 0;
         taskList.push(...this.tasks);
     },
+    // toggle the completion status of a task
+    toggleTask(taskId) {
+        const task = this.findTask(taskId);
+
+        if (task) {
+            task.completed = !task.completed;
+        }
+    }
 };
 
 // export functions and classes to use in other modules

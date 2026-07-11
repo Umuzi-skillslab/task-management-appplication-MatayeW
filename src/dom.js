@@ -1,115 +1,156 @@
-// DOM Manipulation - Starter Code with Errors
+// DOM Manipulation
+// handles user interactions, updates the webpage, and saves task changes
+import { taskList, addTask, TaskManager } from "./app.js";
+import { saveToStorage, loadFromStorage } from "./utils.js";
 
-// Missing: proper DOM selectors
+// add all event listeners when the page loads
 function setupEventListeners() {
-    // Wrong selector method*
-    const addButton = document.querySelector(".add-task-btn");  // Wrong - mixing ID and class*
-    // const taskInput = document.querySelector("task-input");  // Missing #
-    
-    // Missing: null checks before adding listeners*
+    // find the add task button
+    const addButton = document.querySelector(".add-task-btn");
+    // click event to create a new task
     if (addButton) {
     addButton.addEventListener("click", handleAddTask);
     }
-    // Missing: other event listeners for form submission, etc.
+    // find the task list container
+    const taskContainer = document.getElementById("task-list");
+
+    if (taskContainer) {
+        // uses event delegation to detect clicks on task buttons
+        taskContainer.addEventListener("click", handleTaskClick);
+    }
 }
 
-// Function with DOM manipulation errors
+// create a new task using the user's input
 function handleAddTask(event) {
-
+// prevents the page from refreshing
     event.preventDefault();
 
+    // get input fields from the page
     const titleInput = document.getElementById("title");
     const descInput = document.getElementById("description");
     
     const priorityInput = document.getElementById("priority");
-    const priority = Number(priorityInput.value) || 1;
-    // No validation
-    // Should use event.preventDefault() if form*
-    
-    if (!titleInput ||!descInput) return;
+    const priority = priorityInput.value;
 
+    if (!titleInput || !descInput || !priorityInput) {
+        console.error("Required form elements were not found.");
+        return;
+    }
+
+    // remove extra spaces from the user's input
     const title = titleInput.value.trim();
     const description = descInput.value.trim();
-    
-    // Missing: priority input*
-    if (title === "") {
-        alert("Please enter a title.");
+
+    if (!priority) {
+        alert("Please select a priority.")
         return;
     }
     
-    addTask(title, description, priority);
-    saveTasks();
-    displayTasks();
+    if (title === "" || description === "") {
+        alert("Please enter a title and description.");
+        return;
+    }
     
-    // Missing: clear inputs after adding*
+    // create and save the new task
+    const task = addTask(title, description, priority);
+
+    if (task) {
+    saveToStorage(taskList);
+    displayTasks();
+    console.log("Task added successfully.");
+}
+
+// clear the form, ready for the next task
+    priorityInput.value = "";
     titleInput.value = "";
     descInput.value = "";
 }
 
-// Function that should use better selectors
+// display all tasks currently stored
 function displayTasks() {
     const container = document.getElementById("task-list");
-    
-    // Should clear existing content first
-    // Missing: null check*
     if (!container) return;
-    
-    // Inefficient - should use template literals and insertAdjacentHTML
-    // for (var i = 0; i < taskList.length; i++) {
-    //     var div = document.createElement("div");
-    //     div.innerHTML = "<h3>" + taskList[i].title + "</h3>";
-    //     div.innerHTML = div.innerHTML + "<p>" + taskList[i].description + "</p>";
-    //     container.appendChild(div);
-        
-        // Missing: task ID, completion status, event handlers for delete/complete
+    // remove any tasks currently displayed to avoid duplicates
         container.innerHTML = "";
 
         for (const task of taskList) {
+            // extract task properties using object destructing
+            const {
+                id,
+                title,
+                description,
+                priority,
+                completed,
+                dateCreated,
+                timeCreated
+            } = task;
+
+            // create the HTML for each task and add it to the page
             container.insertAdjacentHTML(
             "beforeend",
             `
-            <div class ="task" data-id="${task.id}">
-                <h3>${task.title}</h3>
-                <p>${task.description}</p>
-                <p>Priority: ${task.priority}</p>
+            <div class ="task" data-id="${id}">
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <p><strong>Priority:</strong> ${priority}</p>
+                <p><strong>Date:</strong> ${dateCreated}</p>
+                <p><strong>Time:</strong> ${timeCreated}</p>
+                <p><strong>Status:</strong> ${completed ? "Completed" : "Pending"}</p>
+                <button class = "complete-btn"> ${completed ? "Undo" : "Complete"}</button>
+                <button class = "delete-btn">Delete</button>
             </div>
             `
             );
         }
     }
 
-// Function with event handling issues
+// handle clicks on task buttons using event delegation
 function handleTaskClick(event) {
-    // Missing: event.target check
-    // Missing: proper event delegation
+    // check whether the Complete button was clicked
+    const completeButton = event.target.closest(".complete-btn");
+
+    if (completeButton) {
+        const taskElement = deleteButton.closest(".task");
+        const taskId = taskElement.dataset.id;
+
+        const task = TaskManager.findTask(taskId);
+
+        if (task) {
+            TaskManager.toggleTask(taskId);
+            saveToStorage(taskList);
+            displayTasks();
+
+            console.log("Task completion updated.")
+        }
+        return;
+    }
     
-    const taskElement = event.target.closest(".task");
+    // check if the Delete button was clicked
+    const deleteButton = event.target.closest(".delete-btn");
 
-    if (!taskElement) return;
+    if (!deleteButton) return;
 
-    const taskId = Number(taskElement.dataset.id);  // Wrong way to get task ID
+    const taskElement = deleteButton.closest(".task");
+    const taskId = taskElement.dataset.id;
+
+    // delete the selected task and update storage
+    TaskManager.deleteTask(taskId);
+
+    saveToStorage(taskList);
+
+    displayTasks();
     
-    // Should toggle task completion
-    console.log(`Task clicked: ${taskId}`);
+    console.log("Task deleted.");
 }
 
-// Missing: JSON conversion functions
-// Missing: functions to save/load tasks from localStorage
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(taskList));
-}
-function loadTasks() {
-    const savedTasks = localStorage.getItem("tasks");
-
-    if (!savedTasks) return;
-
-    taskList = JSON.parse(savedTasks);
-}
-// Initialize (wrong placement - should use DOMContentLoaded)
+// load saved tasks and prepare the application when page has loaded
 document.addEventListener("DOMContentLoaded", () => {
-    loadTasks();
+    // retrieve previously saved tasks
+    const savedTasks = loadFromStorage();
+    // restore saved tasks into task list
+    taskList.push(...savedTasks);
+
+    // display tasks and enable user interactions
     displayTasks();
     setupEventListeners();
 });
-
-
