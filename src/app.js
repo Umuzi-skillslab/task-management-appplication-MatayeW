@@ -1,8 +1,14 @@
 // Task Management Application - Starter Code with Errors
 
 // Global variables (scoping issues)
-var taskList = [];  // Missing var/let/const*
-let taskCounter = 0;  // Should use let or const*
+// var taskList = [];  // Missing var/let/const*
+// let taskCounter = 0;  // Should use let or const*
+
+
+import { generateRandomId, getCurrentDateTime } from "./utils";
+// store all tasks in memory while application is running
+const taskList = [];
+
 
 // Task class with errors
 class Task {
@@ -12,7 +18,13 @@ class Task {
         this.priority = priority;
         this.completed = false;
         // Missing: id property*
-        this.id = ++taskCounter;
+        // this.id = ++taskCounter;
+        
+        //save a unique ID and the date/time the task was created
+        const { id, dateCreated, timeCreated } = getCurrentDateTime();
+        this.id = id;
+        this.dateCreated = dateCreated;
+        this.timeCreated = timeCreated;
     }
     
     // Missing: method to toggle completion*
@@ -80,13 +92,21 @@ function findTaskByTitle(title) {
 function updateTaskPriority(taskId, newPriority) {
     // Missing: typeof check for parameters
     // Missing: null/undefined validation
+    if (typeof taskId !== "number" || typeof newPriority !== "number") {
+        return false;
+    }
     
+    if (taskId == null || newPriority == null) {
+        return false;
+    }
+
     for (let i = 0; i < taskList.length; i++) {
         if (taskList[i].id === taskId) {  // Wrong operator (= instead of ===)*
             taskList[i].priority = newPriority;
             return true;
         }
     }
+
     return false;
 }
 
@@ -105,10 +125,10 @@ function getTaskDetails(task) {
     } = task;
     
     return {
-        title: title,
-        description: description,
-        priority: priority,
-        completed: completed
+        title,
+        description,
+        priority,
+        completed
     };
 }
 
@@ -159,7 +179,7 @@ function calculateAveragePriority() {
 
 // Filter function with errors
 function getHighPriorityTasks(minPriority) {
-    var highPriority = [];
+    // var highPriority = [];
     // Should use array methods (filter)*
     // for (var i = 0; i < taskList.length; i++) {
     //     if (taskList[i].priority > minPriority) {
@@ -186,21 +206,33 @@ const TaskManager = {
     getCompletedTasks() {
         return this.tasks.filter(task => task.completed);
     }
+    getTaskTitles() {
+        return this.tasks.map(task => task.title);
+    }
+    findTask(id) {
+        return this.tasks.find(task => task.id === id);
+    }
+    getAveragePriority() {
+        return this.tasks.reduce((sum, task) => sum + task.priority, 0);
+    }
+    function addMultipleTasks(...tasks) {
+        taskList.push(...tasks);
+    }
 };
 
 // Export issues - should be a module*
 // Missing: proper module exports*
-// export {
-//     Task,
-//     SubTask,
-//     addTask,
-//     displayAllTasks,
-//     findTaskByTitle,
-//     updateTaskPriority,
-//     getTaskDetails,
-//     mergeTasks,
-//     countCompletedTasks,
-//     calculateAveragePriority,
-//     getHighPriorityTasks,
-//     TaskManager
-// };
+export {
+    Task,
+    SubTask,
+    addTask,
+    displayAllTasks,
+    findTaskByTitle,
+    updateTaskPriority,
+    getTaskDetails,
+    mergeTasks,
+    countCompletedTasks,
+    calculateAveragePriority,
+    getHighPriorityTasks,
+    TaskManager
+};
