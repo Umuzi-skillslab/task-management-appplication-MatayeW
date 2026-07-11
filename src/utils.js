@@ -1,44 +1,100 @@
-// Utilities - Starter Code (WITH ERRORS AND MISSING FEATURES)
+// Utilities
 
-// Bug: Not using proper data structures
-var priorities = ["low", "medium", "high"];
+// task priority levels
+const priorities = ["High", "Medium", "Low"];
 
-// Bug: Missing JSON operations
 function saveToStorage(data) {
-    // Bug: Not converting to JSON
-    localStorage.setItem("tasks", data);
-}
-
-function loadFromStorage() {
-    // Bug: Not parsing JSON
-    var data = localStorage.getItem("tasks");
-    return data;
-}
-
-// Bug: Incorrect Math object usage
-function generateRandomId() {
-    return Math.random();  // Bug: Returns decimal, not integer
-}
-
-// Bug: Poor string manipulation
-function formatTaskName(name) {
-    // Bug: Not using string methods properly
-    var result = name;
-    return result;  // Should capitalize, trim, etc.
-}
-
-// Bug: Incorrect boolean logic
-function isHighPriority(task) {
-    if (task.priority == "high") {  // Bug: Using ==
-        return "yes";  // Bug: Should return boolean
+    try {
+    localStorage.setItem("tasks", JSON.stringify(data));
+    } catch (error) {
+        console.error("Error saving tasks", error);
     }
-    return "no";
+}
+// load tasks from local Storage
+function loadFromStorage() {
+    try {
+    const data = localStorage.getItem("tasks");
+    if (!data) {
+        return [];
+    }
+    return JSON.parse(data);
+    } catch (error) {
+        console.error("Error loading tasks", error);
+        return []; 
+    }
 }
 
-// Missing: Class definitions
-// Missing: Inheritance example
-// Missing: Module exports
-// Missing: Proper use of operators (logical, comparison)
-// Missing: Recursion
-// Missing: Functional programming patterns
-// Missing: Proper scope demonstration
+// generates a unique ID for each task
+function generateRandomId() {
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+// records the current date and time (that the task is created)
+function getCurrentDateTime() {
+    const now = new Date();
+
+    return {
+        id: generateRandomId(),
+        dateCreated: now.toLocaleDateString(),
+        timeCreated: now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        })
+    };
+}
+
+// format a task title neatly
+function formatTaskName(name) {
+    if (typeof name !== "string") {
+        return "";
+    }
+    const trimmedName = name.trim();
+    return trimmedName.charAt(0).toUpperCase() + trimmedName.slice(1);
+}
+
+// Check if a task has a High priority
+function isHighPriority(task) {
+    return task && task.priority === "High";
+}
+
+// check if priority value is valid
+function isValidPriority(priority) {
+    return priorities.includes(priority);
+}
+
+// count the number of tasks recursively
+function countTasks(tasks, index = 0) {
+    if (!Array.isArray(tasks)) {
+        return 0;
+    }
+    if (index >= tasks.length) {
+        return 0;
+    }
+    return 1 + countTasks(tasks, index +1);
+}
+// return formatted task names
+function formatTaskNames(tasks) {
+    if (!Array.isArray(tasks)) {
+        return [];
+    }
+    return tasks.map(task => formatTaskName(task.title || ""));
+}
+// format a task for display
+function formatTaskInfo(task) {
+    return `${task.title} (${task.priority})`;
+}
+
+// export utility functions to use in other modules
+export {
+    priorities,
+    saveToStorage,
+    loadFromStorage,
+    generateRandomId,
+    getCurrentDateTime,
+    formatTaskName,
+    isHighPriority,
+    isValidPriority,
+    countTasks,
+    formatTaskNames,
+    formatTaskInfo
+};
