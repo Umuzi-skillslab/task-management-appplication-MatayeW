@@ -1,25 +1,28 @@
-// Task Management Application - Starter Code with Errors
-
-// Global variables (scoping issues)
-// var taskList = [];  // Missing var/let/const*
-// let taskCounter = 0;  // Should use let or const*
-
-
-import { generateRandomId, getCurrentDateTime } from "./utils";
+// Task Management Application
+//import functions used throughout the application
+import { getCurrentDateTime } from "./utils.js";
 // store all tasks in memory while application is running
 const taskList = [];
 
-
-// Task class with errors
+//represents a single task
 class Task {
     constructor(title, description, priority) {
+
+        if (!title || !description) {
+            throw new Error("Title and description are required.");
+        }
+
+        const validPriorities = ["High", "Medium", "Low"];
+
+        if (!validPriorities.includes(priority)) {
+            throw new Error("Invalid priority.");
+        }
+
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.completed = false;
-        // Missing: id property*
-        // this.id = ++taskCounter;
-        
+
         //save a unique ID and the date/time the task was created
         const { id, dateCreated, timeCreated } = getCurrentDateTime();
         this.id = id;
@@ -27,59 +30,44 @@ class Task {
         this.timeCreated = timeCreated;
     }
     
-    // Missing: method to toggle completion*
+    // switch a task between completed and incomplete
     toggleCompletion() {
         this.completed = !this.completed;
     }
     
     getInfo() {
-        // Wrong string concatenation - should use template literals*
+        // template literals string concatenation
         return `Task: ${this.title} - Priority: ${this.priority}`;
     }
 }
 
-// Subtask class with inheritance issues
 class SubTask extends Task {
     constructor(title, description, priority, parentTask) {
-        // Missing: super() call*
         super(title, description, priority);
         this.parentTask = parentTask;
     }
 }
 
-// Functions with errors
-
-// Function with no error handling
+//create and add a validated task
 function addTask(title, description, priority) {
+    try {
     const newTask = new Task(title, description, priority);  // Should use const*
     taskList.push(newTask);
     return newTask;
+    } catch(error) {
+        console.error(error.message);
+        return null;
+    }
 }
 
-// Function with incorrect loop*
 function displayAllTasks() {
-    // Wrong loop - should use for-of
-    // for (var i = 0; i <= taskList.length; i++) {  // Off-by-one error
-    //     console.log(taskList[i].title);
-// }
-
     for (const task of taskList) {
         console.log(task.title);
     }
 }
 
-
-// Function missing parameter
+//Search for a task using its title
 function findTaskByTitle(title) {
-    // Missing: title parameter*
-    // Wrong loop construct*
-    // var i = 0;
-    // while (i < taskList.length) {
-    //     if (taskList[i].title == title) {  // Should use ===*
-    //         return taskList[i];
-    //     }
-    //     // Missing: i++
-    // }
     for (const task of taskList) {
         if (task.title === title) {
             return task;
@@ -88,11 +76,16 @@ function findTaskByTitle(title) {
     return undefined;
 }
 
-// Function with type checking issues
+// Updating task priorities to be medium, high and low
 function updateTaskPriority(taskId, newPriority) {
-    // Missing: typeof check for parameters
-    // Missing: null/undefined validation
-    if (typeof taskId !== "number" || typeof newPriority !== "number") {
+
+    if (typeof taskId !== "string" || typeof newPriority !== "string") {
+        return false;
+    }
+
+    const validPriorities = ["High", "Medium", "Low"];
+
+    if (!validPriorities.includes(newPriority)) {
         return false;
     }
     
@@ -110,13 +103,8 @@ function updateTaskPriority(taskId, newPriority) {
     return false;
 }
 
-// Function that should use destructuring but doesn't
+// Function that uses destructuring
 function getTaskDetails(task) {
-    // Should destructure task properties*
-    // var title = task.title;
-    // var description = task.description;
-    // var priority = task.priority;
-    // var completed = task.completed;
     const {
         title,
         description,
@@ -132,24 +120,17 @@ function getTaskDetails(task) {
     };
 }
 
-// Function missing spread/rest operators
+// merge two arrays using a spread operator
 function mergeTasks(list1, list2) {
-    // Should use spread operator*
-    // var merged = [];
-    // for (var i = 0; i < list1.length; i++) {
-    //     merged.push(list1[i]);
-    // }
-    // for (var i = 0; i < list2.length; i++) {
-    //     merged.push(list2[i]);
-    // }
-    // return merged;
     return [...list1, ...list2];
 }
+//Return a copy of a task with a new priority
+function changeTaskPriority(task, priority) {
+    return { ...task, priority};
+}
 
-// Recursive function with error
+// Recursive function counting completed tasks
 function countCompletedTasks(tasks, index = 0) {
-    // Missing: base case check*
-    // Missing: null/undefined check*
     if (!tasks || index >= tasks.length) {
         return 0;
     }
@@ -160,69 +141,100 @@ function countCompletedTasks(tasks, index = 0) {
         return countCompletedTasks(tasks, index + 1);
     }
 
-// Function with Math object issues
 function calculateAveragePriority() {
     let total = 0;
-    // Missing: check for empty array*
-    // for (var i = 0; i < taskList.length; i++) {
-    //     total = total + taskList[i].priority;
-    // }
+
     if(taskList.length === 0) {
         return 0;
     }
+//Assign values to priority strings
+    const priorityValues = {
+        High: 3,
+        Medium: 2,
+        Low: 1
+    };
+    
     for (const task of taskList) {
-        total += task.priority;
+        total += priorityValues[task.priority];
     }
-    // Should use Math.round or toFixed*
+  
     return Math.round(total / taskList.length);
 }
 
-// Filter function with errors
-function getHighPriorityTasks(minPriority) {
-    // var highPriority = [];
-    // Should use array methods (filter)*
-    // for (var i = 0; i < taskList.length; i++) {
-    //     if (taskList[i].priority > minPriority) {
-    //         highPriority.push(taskList[i]);
-    //     }
-    // }
-    // return highPriority;
-    return taskList.filter(task => task.priority > minPriority);
+// Filter function 
+function getHighPriorityTasks() {
+    return taskList.filter(task => task.priority === "High");
 }
 
-// Object with missing methods
+// object with methods used for managing tasks
 const TaskManager = {
     tasks: taskList,
-    
-    // Missing: method to add task using functional approach*
-    // Missing: method using array methods (map, filter, reduce)*
-    
-    getTotalTasks: function() {
+
+    //return the total number of tasks
+    getTotalTasks() {
         return this.tasks.length;
     },
+    //add a task to the task list
     addTask(task) {
         this.tasks.push(task);
     },
+    //return only completed tasks
     getCompletedTasks() {
         return this.tasks.filter(task => task.completed);
-    }
+    },
+    //return an array of task titles
     getTaskTitles() {
         return this.tasks.map(task => task.title);
-    }
+    },
+    //find a task using its unique ID
     findTask(id) {
         return this.tasks.find(task => task.id === id);
-    }
+    },
+    //calculate average priority value of all tasks
     getAveragePriority() {
-        return this.tasks.reduce((sum, task) => sum + task.priority, 0);
-    }
-    function addMultipleTasks(...tasks) {
-        taskList.push(...tasks);
-    }
+        const priorityValues = {
+            High: 3,
+            Medium: 2,
+            Low: 1
+        };
+        const total = this.tasks.reduce((sum, task) => {
+            return sum + priorityValues[task.priority];
+        }, 0);
+
+        return this.tasks.length === 0
+        ? 0
+        : Math.round(total / this.tasks.length);
+    },
+    //add multiple tasks at once using rest operator
+    addMultipleTasks(...tasks) {
+        this.tasks.push(...tasks);
+    },
+    //remove a task from the task list
+    deleteTask(taskId) {
+        const index = this.tasks.findIndex(task => task.id === taskId);
+
+        if (index !== -1) {
+            this.tasks.splice(index, 1);
+            //returning whether or not it worked for testing
+            return true;
+        }
+        return false;
+    },
+    //check if completed tasks exists
+    hasCompletedTasks() {
+        return this.tasks.some(task => task.completed);
+    },
+    //remove every completed task from task list
+    clearCompletedTasks() {
+        this.tasks = this.tasks.filter(task => !task.completed);
+        taskList.length = 0;
+        taskList.push(...this.tasks);
+    },
 };
 
-// Export issues - should be a module*
-// Missing: proper module exports*
+// export functions and classes to use in other modules
 export {
+    taskList,
     Task,
     SubTask,
     addTask,
