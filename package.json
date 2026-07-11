@@ -1,6 +1,7 @@
 {
   "name": "task-manager-starter",
   "version": "1.0.0",
+  "type": "module",
   "description": "Task Management Application - Starter Code",
   "main": "app.js",
   "scripts": {
