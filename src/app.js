@@ -55,7 +55,7 @@ function addTask(title, description, priority) {
     taskList.push(newTask);
     return newTask;
     } catch(error) {
-        console.error(error.message);
+        console.error("Failed to create task", error.message);
         return null;
     }
 }
@@ -89,7 +89,7 @@ function updateTaskPriority(taskId, newPriority) {
         return false;
     }
     
-    if (taskId == null || newPriority == null) {
+    if (!taskId || !newPriority) {
         return false;
     }
 
@@ -231,9 +231,9 @@ const TaskManager = {
     },
     //remove every completed task from task list
     clearCompletedTasks() {
-        this.tasks = this.tasks.filter(task => !task.completed);
+        const activeTasks = this.tasks.filter(task => !task.completed);
         taskList.length = 0;
-        taskList.push(...this.tasks);
+        taskList.push(...activeTasks);
     },
     // toggle the completion status of a task
     toggleTask(taskId) {
@@ -241,6 +241,7 @@ const TaskManager = {
 
         if (task) {
             task.completed = !task.completed;
+            return true;
         }
         return false;
     }

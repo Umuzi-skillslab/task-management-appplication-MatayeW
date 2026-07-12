@@ -1,6 +1,5 @@
 // Jest Tests
 
-// Missing: proper imports/requires
 import {
     Task,
     SubTask,
@@ -10,11 +9,12 @@ import {
     updateTaskPriority,
     getTaskDetails,
     mergeTasks,
+    changeTaskPriority,
     countCompletedTasks,
     calculateAveragePriority,
     getHighPriorityTasks,
     TaskManager
-} from "./app.js";
+} from "../src/app.js";
 
 // to reset the task list before every test
 beforeEach(() => {
@@ -47,6 +47,12 @@ describe("Task Class", () => {
         task.toggleCompletion();
         expect(task.completed).toBe(true);
     })
+    // test that invalid priorities are rejected
+    test("should reject an invalid priority", () => {
+        expect(() => {
+            new Task("Study", "JavaScript", "Urgent");
+        }).toThrow("Invalid priority.");
+    });
 });
 
 describe("Task Functions", () => {
@@ -150,6 +156,14 @@ describe("Spread and Rest Operators", () => {
         TaskManager.addMultipleTasks(one, two);
         expect(taskList.length).toBe(2);
     });
+    // test for changeTaskPriority
+    test("should return a copy of a task with a new priority", () => {
+        const task = new Task("Homework", "Math", "Low");
+        const updated = changeTaskPriority(task, "High");
+
+        expect(updated.priority).toBe("High");
+        expect(task.priority).toBe("Low");
+    });
 })
 
 // describe block for TaskManager
@@ -170,7 +184,7 @@ describe("TaskManager Methods", () => {
     });
 
 // test for getTaskTitles
-    test("shoult return task titles", () => {
+    test("should return task titles", () => {
         addTask("Homework", "Math", "High");
         expect(TaskManager.getTaskTitles()).toEqual(["Homework"]);
     });
@@ -211,6 +225,14 @@ describe("TaskManager Methods", () => {
         const task = addTask("Homework", "Math", "High");
         TaskManager.toggleTask(task.id);
         expect(task.completed).toBe(true);
+    });
+// test for getAveragePriority()
+    test("should return average priority", () => {
+        addTask("One", "Task", "High");
+        addTask("Two", "Task", "Medium");
+        addTask("Three", "Task", "Low");
+
+        expect(TaskManager.getAveragePriority()).toBe(2);
     });
 
 })

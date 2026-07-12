@@ -5,7 +5,7 @@
   "description": "Task Management Application - Starter Code",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": ["tasks", "javascript"],
   "author": "",
