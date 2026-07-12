@@ -1,0 +1,43 @@
+Issues Identified
+
+Variables & Operators
+• var declarations instead of let/const.
+• Incorrect comparison operators (== instead of ===).
+• Missing variable declarations.
+
+Control Flow
+• Off-by-one loop error.
+• Infinite loop caused by missing increment.
+• Missing conditional checks.
+
+Functions
+• Missing function parameters.
+• Incorrect return statements.
+• Recursive function missing a base case.
+
+Object-Oriented Programming
+• Task class missing ID property.
+• Task class missing toggleCompletion().
+• SubTask missing super() call.
+• TaskManager missing required methods.
+
+Modern JavaScript
+• Missing destructuring.
+• Missing template literals.
+• Missing spread/rest operators.
+• No ES6 module structure.
+
+DOM
+• Incorrect DOM selectors.
+• Missing event listeners.
+• No localStorage JSON handling.
+
+Testing
+• Incomplete Jest tests.
+• No edge-case tests.
+• Missing beforeEach reset.
+
+Error Handling & Code Quality
+• No try-catch blocks.
+• Missing input validation.
+• Insufficient comments.
